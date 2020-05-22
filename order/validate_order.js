@@ -7,7 +7,8 @@ function enableSumbitIfFormIsValid() {
     isPhoneValid &&
     isStreetValid &&
     isZipcodeValid &&
-    isCityValid
+    isCityValid &&
+    isPasswordValid
   ) {
     submitBtn.disabled = false;
   }
@@ -19,6 +20,7 @@ let isPhoneValid = false;
 let isStreetValid = false;
 let isZipcodeValid = false;
 let isCityValid = false;
+let isPasswordValid = false;
 
 // Validering av namn
 function validateName() {
@@ -29,6 +31,8 @@ function validateName() {
     infoText.innerHTML = "OBS! Obligatoriskt fält";
   } else if (new RegExp("[0-9]").test(name)) {
     infoText.innerHTML = "OBS! Inga siffror tillåtna";
+  } else if (!new RegExp("[\b \b]").test(name)) {
+    infoText.innerHTML = "OBS! Fyll i förnamn, mellanslag, efternamn.";
   } else if (name.length > 20) {
     infoText.innerHTML = "OBS! Otillåtet med fler än 20 tecken";
   } else if (name.length < 2) {
@@ -58,8 +62,8 @@ function validateEmail() {
     infoText.innerHTML = "OBS! Obligatoriskt fält";
   } else if (!isValidEmail(email)) {
     infoText.innerHTML = "OBS! Ogiltig e-postadress";
-  } else if (email.length > 64) {
-    infoText.innerHTML = "OBS! Otillåtet med fler än 64 tecken";
+  } else if (email.length > 50) {
+    infoText.innerHTML = "OBS! Otillåtet med fler än 50 tecken";
   } else {
     infoText.innerHTML = "";
     isEmailValid = true;
@@ -85,8 +89,8 @@ function validatePhone() {
     infoText.innerHTML = "OBS! Inga bokstäver tillåtna";
   } else if (isValidPhone(phone)) {
     infoText.innerHTML = "OBS! Ogiltigt mobilnummer";
-  } else if (phone.length != 10) {
-    infoText.innerHTML = "OBS! Numret måste vara 10 siffror långt";
+  } else if (phone.length > 13) {
+    infoText.innerHTML = "OBS! Numret är för långt";
   } else {
     infoText.innerHTML = "";
     isPhoneValid = true;
@@ -98,7 +102,7 @@ function validatePhone() {
 }
 
 function isValidPhone(phone) {
-  let re = /[^0-9:]/;
+  let re = /[^0-9/b /b/-]/;
   return re.test(String(phone));
 }
 
@@ -195,4 +199,31 @@ function validateCity() {
 function isValidCity(city) {
   let re = /[^a-öA-Ö\s:]/;
   return re.test(String(city));
+}
+
+function validatePassword() {
+  let password = document.querySelector("#password").value;
+  let infoText = document.querySelector(".passwordValidationText");
+
+  if (password.length === 0) {
+    infoText.innerHTML = "OBS! Obligatoriskt fält"
+  } else if(!isPasswordValid()) {
+    infoText.innerHTML = "OBS! Lösenordet är för svagt";
+  } else {
+    infoText.innerHTML = "";
+    isPasswordValid = true;
+    enableSumbitIfFormIsValid();
+    return;
+  }
+  submitBtn.disabled = true;
+  isPasswordValid = false;
+  }
+
+  function isPasswordValid() {
+    //en liten bokstav, en stor bokstav, minst 8 tecken
+    let regEx = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
+    return regEx.test(String(password))
+  }
+
+
 }
