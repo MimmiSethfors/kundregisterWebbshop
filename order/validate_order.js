@@ -9,7 +9,7 @@ function enableSumbitIfFormIsValid() {
     isZipcodeValid &&
     isCityValid &&
     isPasswordValid
-    
+
   ) {
     submitBtn.disabled = false;
   }
@@ -30,16 +30,8 @@ function validateName() {
 
   if (name.length === 0) {
     infoText.innerHTML = "OBS! Obligatoriskt fält";
-  } else if (new RegExp("[0-9]").test(name)) {
-    infoText.innerHTML = "OBS! Inga siffror tillåtna";
-  } else if (!new RegExp("[\b \b]").test(name)) {
-    infoText.innerHTML = "OBS! Fyll i förnamn, mellanslag, efternamn.";
-  } else if (name.length > 20) {
-    infoText.innerHTML = "OBS! Otillåtet med fler än 20 tecken";
-  } else if (name.length < 2) {
-    infoText.innerHTML = "OBS! Måste skriva mer än 2 tecken";
-  } else if (isValidName(name)) {
-    infoText.innerHTML = "OBS! Ogiltigt namn";
+  } else if (!isValidName(name)) {
+    infoText.innerHTML = "OBS! Skriv för, mellanslag, efternamn, båda namnen måste vara mellan 2-20 bokstäver långa";
   } else {
     infoText.innerHTML = "";
     isNameValid = true;
@@ -50,7 +42,7 @@ function validateName() {
   isNameValid = false;
 }
 function isValidName(name) {
-  let re = /[^a-öA-Ö\s:]/;
+  let re = /^[a-zA-Z]{2,10} [a-zA-Z]{2,20}$/;
   return re.test(String(name));
 }
 
@@ -92,6 +84,8 @@ function validatePhone() {
     infoText.innerHTML = "OBS! Ogiltigt mobilnummer";
   } else if (phone.length > 13) {
     infoText.innerHTML = "OBS! Numret är för långt";
+  } else if (phone.length < 6) {
+    infoText.innerHTML = "OBS! Numret är för kort";
   } else {
     infoText.innerHTML = "";
     isPhoneValid = true;
@@ -220,7 +214,7 @@ function validatePassword() {
 }
 
 function isValidPassword(password) {
-  
+
   //en siffra, en liten bokstav, en stor bokstav, minst 8 tecken
   let regEx = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
   console.log(regEx.test(String(password)))
