@@ -1,11 +1,5 @@
-/*let myDetails;
 
-if (JSON.parse(localStorage.getItem("details")) !== null) {
-  myDetails = JSON.parse(localStorage.getItem("details"));
-} else {
-  myDetails = [];
-}*/
-
+//lägg in i localstorage
 let myName;
 let myEmail;
 let myPhone;
@@ -27,5 +21,8 @@ localStorage.setItem("street", myStreet.textContent)
 localStorage.setItem("zip", myZip.textContent)
 localStorage.setItem("city", myCity.textContent)
 
-console.log(localStorage)
+
+
+
+
 

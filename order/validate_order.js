@@ -9,6 +9,7 @@ function enableSumbitIfFormIsValid() {
     isZipcodeValid &&
     isCityValid &&
     isPasswordValid
+    
   ) {
     submitBtn.disabled = false;
   }
@@ -204,10 +205,9 @@ function isValidCity(city) {
 function validatePassword() {
   let password = document.querySelector("#password").value;
   let infoText = document.querySelector(".passwordValidationText");
-
   if (password.length === 0) {
     infoText.innerHTML = "OBS! Obligatoriskt fält"
-  } else if(!isPasswordValid()) {
+  } else if (!isValidPassword(password)) {
     infoText.innerHTML = "OBS! Lösenordet är för svagt";
   } else {
     infoText.innerHTML = "";
@@ -217,13 +217,14 @@ function validatePassword() {
   }
   submitBtn.disabled = true;
   isPasswordValid = false;
-  }
-
-  function isPasswordValid() {
-    //en liten bokstav, en stor bokstav, minst 8 tecken
-    let regEx = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
-    return regEx.test(String(password))
-  }
-
-
 }
+
+function isValidPassword(password) {
+  
+  //en siffra, en liten bokstav, en stor bokstav, minst 8 tecken
+  let regEx = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+  console.log(regEx.test(String(password)))
+  return regEx.test(String(password))
+}
+
+

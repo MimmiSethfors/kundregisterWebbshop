@@ -174,12 +174,16 @@ emptyCartBtn.addEventListener("click", emptyCart);
 //Töm varukorgen
 function emptyCart() {
   myProducts = [];
-  localStorage.clear();
+  localStorage.removeItem("freight")
+  localStorage.removeItem("products")
+  localStorage.removeItem("totalprice")
   drawCart();
 }
 
 function updateLocalStorage() {
-  localStorage.clear();
+  localStorage.removeItem("freight")
+  localStorage.removeItem("products")
+  localStorage.removeItem("totalprice")
   localStorage.setItem("products", JSON.stringify(myProducts));
 }
 

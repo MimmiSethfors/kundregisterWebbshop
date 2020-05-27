@@ -5,5 +5,7 @@ printOrderBtn.addEventListener("click", function () {
 })
 
 //Tömmer localstorage och varukorgen
-localStorage.clear()
+localStorage.removeItem("freight")
+localStorage.removeItem("products")
+localStorage.removeItem("totalprice")
 updateCartCount()

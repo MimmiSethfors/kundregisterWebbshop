@@ -1,10 +1,12 @@
 <?php
  require_once '../second_header_extern.php';
+ $emailExists = ""
 ?>
 </header>
 <main>
 
 <h1>Nytt konto</h1>
+<div> <?php echo $emailExists?></div>
 <form name="orderForm" action="#" method="POST" id="contact-form" class="form-container" onsubmit="return hiddenProducts()">
 
 <div class="order_field-name form-container__box">
@@ -82,9 +84,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') :
   $error = array();
   $name = $email = $phone = $street = $zip = $city = $password = "";
 
-  print_r($_POST);
-  //php kontroll av alla fält
-
+  
+  //php validering av alla fält
   if (empty($_POST['name'])) {
     $error[] =  "Du måste ange namn";
   } else if (isset($_POST['name'])) {
@@ -143,29 +144,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') :
   //Utan felmeddelanden
   if (count($error) == 0) {
     //echo "inga fel";
+    $checkemailSQL = "SELECT `email` FROM `webshop_user` WHERE `email` = '$email'";
+    $stmt = $db->prepare($checkemailSQL);
+    $stmt-> execute();
 
-     //Skicka beställning till databasen
-    $sql = "INSERT INTO webshop_user (name, email, phone, street, zip, city, password)
+    if($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+      
+      $emailExists = "Det finns redan ett konto med denna epostadress";
+
+    }else {
+
+      
+      //Skicka beställning till databasen
+      $sql = "INSERT INTO webshop_user (name, email, phone, street, zip, city, password)
             VALUES (:name, :email, :phone, :street, :zip, :city, :password)";
 
 
-    $stmt = $db->prepare($sql);
+$stmt = $db->prepare($sql);
 
-    $stmt->bindParam(':name', $name);
-    $stmt->bindParam(':email', $email);
-    $stmt->bindParam(':phone', $phone);
-    $stmt->bindParam(':street', $street);
-    $stmt->bindParam(':zip', $zip);
-    $stmt->bindParam(':city', $city);
-    $stmt->bindParam(':password', $password);
+$stmt->bindParam(':name', $name);
+$stmt->bindParam(':email', $email);
+$stmt->bindParam(':phone', $phone);
+$stmt->bindParam(':street', $street);
+$stmt->bindParam(':zip', $zip);
+$stmt->bindParam(':city', $city);
+$stmt->bindParam(':password', $password);
 
-    $stmt->execute();
-  }
+$stmt->execute();
+}
 
-  
-  //Vid felmeddelanden
-  
-  if (count($error) > 0) {
+}
+//Vid felmeddelanden
+
+if (count($error) > 0) {
     //echo "flera fel";
     foreach ($error as $e) {
       $errors .= "<div class='errors'><p> $e </p></div><br />";
