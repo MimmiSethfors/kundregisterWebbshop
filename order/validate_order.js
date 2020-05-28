@@ -7,8 +7,7 @@ function enableSumbitIfFormIsValid() {
     isPhoneValid &&
     isStreetValid &&
     isZipcodeValid &&
-    isCityValid &&
-    isPasswordValid
+    isCityValid
 
   ) {
     submitBtn.disabled = false;
@@ -21,7 +20,6 @@ let isPhoneValid = false;
 let isStreetValid = false;
 let isZipcodeValid = false;
 let isCityValid = false;
-let isPasswordValid = false;
 
 // Validering av namn
 function validateName() {
@@ -196,29 +194,8 @@ function isValidCity(city) {
   return re.test(String(city));
 }
 
-function validatePassword() {
-  let password = document.querySelector("#password").value;
-  let infoText = document.querySelector(".passwordValidationText");
-  if (password.length === 0) {
-    infoText.innerHTML = "OBS! Obligatoriskt fält"
-  } else if (!isValidPassword(password)) {
-    infoText.innerHTML = "OBS! Lösenordet är för svagt";
-  } else {
-    infoText.innerHTML = "";
-    isPasswordValid = true;
-    enableSumbitIfFormIsValid();
-    return;
-  }
-  submitBtn.disabled = true;
-  isPasswordValid = false;
-}
 
-function isValidPassword(password) {
 
-  //en siffra, en liten bokstav, en stor bokstav, minst 8 tecken
-  let regEx = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
-  console.log(regEx.test(String(password)))
-  return regEx.test(String(password))
-}
+
 
 

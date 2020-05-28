@@ -1,33 +1,79 @@
-let submitBtn = document.querySelector(".form-container__submit-button");
+let submitNewUser = document.querySelector(".form-container__submit-button");
+let strengthMeter = document.getElementById('strength-meter');
+let passwordInput = document.getElementById('passwordInput');
+let reasons = document.getElementById('passwordValidationText');
+
 
 function enableSumbitIfFormIsValid() {
-  if (isChangeValid) {
+  if (isPasswordValid) {
     submitBtn.disabled = false;
   }
 }
 
 let isPasswordValid = false;
 
-function validatePasswordChange() {
-  let password = document.querySelector("#password").value;
-  let infoText = document.querySelector(".passwordValidationText");
-  if (password.length === 0) {
-    infoText.innerHTML = "OBS! Obligatoriskt fält"
-  } else if (!isChangeValid(password)) {
-    infoText.innerHTML = "OBS! Lösenordet är för svagt";
-  } else {
-    infoText.innerHTML = "";
+passwordInput.addEventListener('input', updatestrengthMeter)
+updatestrengthMeter()
+
+function updatestrengthMeter() {
+  let weaknesses = passwordStrength(passwordInput.value)
+  //console.log(weaknesses)
+
+  let strength = 100
+  reasons.innerHTML = ''
+  weaknesses.forEach(weakness => {
+    if (weakness == null) return
+    strength -= weakness.deduction
+    let message = document.createElement('div')
+    message.innerText = weakness.message
+    reasons.appendChild(message)
+
+  })
+  if (strength === 100) {
     isPasswordValid = true;
-    enableSumbitIfFormIsValid();
-    return;
+
   }
-  submitBtn.disabled = true;
-  isPasswordValid = false;
+  strengthMeter.style.setProperty('--strength', strength)
 }
 
-function isChangeValid(password) {
-  //en siffra, en liten bokstav, en stor bokstav, minst 8 tecken
-  let regEx = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
-  console.log(regEx.test(String(password)))
-  return regEx.test(String(password))
+function passwordStrength(password) {
+  const weaknesses = []
+  weaknesses.push(lengthWeakness(password))
+  weaknesses.push(numberWeakness(password))
+  weaknesses.push(letterWeakness(password))
+  return weaknesses
 }
+
+function lengthWeakness(password) {
+  const length = password.length
+
+  if (length <= 10) {
+    return {
+      message: "Ditt lösenord måste vara minst 10 karaktärer långt",
+      deduction: 40
+    }
+  }
+}
+
+function numberWeakness(password) {
+  let regEx = password.match(/[0-9]/g) || []
+  if (regEx.length === 0) {
+    return {
+      message: "Lägg till minst 1 siffra",
+      deduction: 30
+    }
+  }
+}
+function letterWeakness(password) {
+  let regEx = password.match(/[A-Z]/g) || []
+
+  if (regEx.length === 0) {
+    return {
+      message: "Du behöver minst 1 stor bokstav",
+      deduction: 30
+    }
+
+  }
+}
+
+

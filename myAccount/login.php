@@ -5,6 +5,7 @@
  $myOrders = ""
  
 ?>
+
 </header>
 <main>
 
@@ -59,9 +60,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $totalprice = htmlspecialchars($row['totalprice']);
       $freight = htmlspecialchars($row['freight']);
 
-    
-
-
       $productsspec = "";
       foreach ($products as $key => $value) {
           $pOutlet="";
@@ -98,9 +96,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $status = "Skickat";
     };
 
-
-   
-
       $myOrders .= "<tr class='table_orders_admin-row'>
                 <td class='table_orders_admin-cell'> $orderid</td>
                 <td class='table_orders_admin-cell products' style='width: 20%'> $productsspec <br>
@@ -129,7 +124,9 @@ if (!$loggedIn){
           <label for='password'></label>
           <input type='password' placeholder='Lösenord' name='password' required>
           <button id='logIn'type='submit'>Logga in</button>
-          <div> $error </div>
+          <div class='errors'> $error </div>
+          <p><a href='recoverPassword.php'>Har du glömt ditt lösenord?</a></p>
+
         </form>
         
         <h2>Saknar du konto?</h2>
@@ -150,16 +147,33 @@ if (!$loggedIn){
         </tbody></table>
         <br>";
   echo "<h3> Dina uppgifter:<h3> 
-            <ul>
-              <li class='myEmail'>$email </li>
-              <li class='myPhone'> $phone</li>
-              <li class='myStreet'>$street</li>
-              <li class='myZip'>$zip</li>
-              <li class='myCity'> $city</li>
-            </ul> <br>";
+  <section class='table_container'>
+  <table class='table_orders_admin' id='table-orders'>
+      <tbody>
+          <tr class='table_orders_admin-row'>
+              <th class='table_orders_admin-head'>Namn</th>
+              <th class='table_orders_admin-head'>Epost</th>
+              <th class='table_orders_admin-head'>Telefon</th>
+              <th class='table_orders_admin-head'>Gatuadress</th>
+              <th class='table_orders_admin-head'>Postadress</th>
+              <th class='table_orders_admin-head'>Ort</th>
+              <th class='table_orders_admin-head'>Ändra lösenord</th>
+              </tr>
+              
+              <tr class='table_orders_admin-row'>
+                <td class='table_orders_admin-cell myName'>$name</td>
+                <td class='table_orders_admin-cell myEmail'>$email</td>
+                <td class='table_orders_admin-cell myPhone'>$phone</td>
+                <td class='table_orders_admin-cell myStreet'>$street</td>
+                <td class='table_orders_admin-cell myZip'>$zip</td>
+                <td class='table_orders_admin-cell myCity'>$city</td>
+                <td class='table_orders_admin-cell'><a href='../myAccount/changepassword.php' ><button class='passwordBtn'>Byt lösenord</button></a></td>
+             </tr>
+        </tbody>
+    </table> <br>";
+
   
-  echo "<a href='../myAccount/changepassword.php' ><button class='passwordBtn'>Byt lösenord</button></a>";
-  echo "<a href='../myAccount/logout.js' ><button class='logoutBtn'>Logga ut</button></a>";
+  echo "<a href='../myAccount/login.php'><button id='logoutBtn' class='logoutBtn'>Logga ut</button></a>";
 
  
   $loggedIn = true;
@@ -171,7 +185,7 @@ if (!$loggedIn){
 
  
 </main>
-
+<script type="application/javascript" src="../myAccount/logout.js"></script>
 <?php
 
 require_once "../footer.php"

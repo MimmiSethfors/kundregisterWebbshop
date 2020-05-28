@@ -29,6 +29,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   <link rel="stylesheet" type="text/css" href="styles/main.css" />
   <link rel="stylesheet" type="text/css" href="../styles/main.css" />
   <title>Spelshoppen</title>
+
+  
 </head>
 
 <body>

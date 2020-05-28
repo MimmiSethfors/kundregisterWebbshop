@@ -1,4 +1,41 @@
-.error {
+.errors {
   color: red;
+  font-weight: bold;
   padding: 1%;
+}
+.success {
+  font-weight: bold;
+  padding: 1%;
+}
+
+*::before, *::after, *{
+  box-sizing: border-box;
+}
+
+
+.strength-meter {
+  margin-top: 2%;
+  margin-bottom: 2%;
+  position: relative;
+  height: 2rem;
+  width: 50%;
+  border: 3px solid #852db8;
+  background-color: #e5cdf38f;;
+  border-radius: 1rem;
+  overflow: hidden;
+ }
+
+ .strength-meter::before{
+   content: '';
+   position: absolute;
+   left: 0;
+   height: 100%;
+   width: calc(1% * var(--strength, 0));
+   background-color: #b852f4;
+   transition: width 200ms;
+
+ }
+ 
+.passwordValidationText {
+  color: red;
 }

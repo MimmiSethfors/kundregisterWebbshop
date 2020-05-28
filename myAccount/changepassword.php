@@ -14,13 +14,18 @@
 <label for='oldPassword'>Gammalt lösenord</label>
 <input type='text' name='oldPassword' required> <br>
 <label for='newPassword'>Nytt lösenord</label>
-<input type='text' name='newPassword' id="password" onblur="validatePasswordChange()" required> <br>
+<input type='text' name='newPassword' id="password" required> <br>
 <div class="passwordValidationText"></div>
 
 <button type='submit' class="form-container__submit-button">Byt lösenord</button>
+<br>
+
 <div> <?php echo $error ?></div>
 </form>
 
+<a href='../myAccount/login.php#'>
+          <button class='btn-back'>Tillbaka</button>
+        </a>
 <?php
 
 
