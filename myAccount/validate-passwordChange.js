@@ -5,12 +5,14 @@ let reasons = document.getElementById('passwordValidationText');
 
 
 function enableSumbitIfFormIsValid() {
-  if (isPasswordValid) {
+  if (isPasswordValid && isQuestionValid && isAnswerValid) {
     submitBtn.disabled = false;
   }
 }
 
 let isPasswordValid = false;
+let isQuestionValid = false;
+let isAnswerValid = false;
 
 passwordInput.addEventListener('input', updatestrengthMeter)
 updatestrengthMeter()
@@ -76,4 +78,53 @@ function letterWeakness(password) {
   }
 }
 
+
+function validateControllQuestion() {
+  let question = document.querySelector('#controllQuestion').value;
+  let infoText = document.querySelector('.QuestionValidationText');
+
+  if (question.length === 0) {
+    infoText.innerHTML = "OBS! Obligatoriskt fält";
+  } else if (question.length < 10) {
+    infoText.innerHTML = "OBS! Din fråga är för kort"
+  } else if (isValidControllQ(question)) {
+    infoText.innerHTML = "OBS! Ogiltig format på frågan, får bara innehålla a-ö, siffror och frågetecken.";
+  } else {
+    infoText.innerHTML = "";
+    isQuestionValid = true;
+    enableSumbitIfFormIsValid();
+    return;
+  }
+
+}
+
+function isValidControllQ(question) {
+  let regEx = /\`|\~|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\+|\=|\[|\{|\]|\}|\||\\|\'|\<|\,|\.|\>|\/|\""|\;|\:/
+  return regEx.test(String(question));
+}
+
+
+function validateControllAnswer() {
+  let answer = document.querySelector('#controllAnswer').value;
+  let infoText = document.querySelector('.AnswerValidationText');
+
+  if (answer.length === 0) {
+    infoText.innerHTML = "OBS! Obligatoriskt fält";
+  } else if (answer.length < 5) {
+    infoText.innerHTML = "OBS! Ditt svar är för kort, måste vara minst fem bokstäver."
+  } else if (isValidControllA(answer)) {
+    infoText.innerHTML = "OBS! Ogiltig format på frågan, får bara innehålla a-ö och siffror.";
+  } else {
+    infoText.innerHTML = "";
+    isAnswerValid = true;
+    enableSumbitIfFormIsValid();
+    return;
+  }
+
+}
+
+function isValidControllA(answer) {
+  let regEx = /\`|\~|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\+|\=|\[|\{|\]|\}|\||\\|\'|\<|\,|\.|\>|\/|\""|\;|\:/
+  return regEx.test(String(answer));
+}
 

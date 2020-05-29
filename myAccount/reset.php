@@ -1,56 +1,66 @@
 <?php
+ require_once '../second_header_extern.php';
+ $error = "";
+ require_once "../config/db.php";
 
-  if(isset($_POST['reset-request-submit'])){
+ if ($_SERVER['REQUEST_METHOD'] === 'POST') :
+  //print_r($_POST);
 
-    $selector = bin2hex(random_bytes(8));
-    $token = random_bytes(32);
+  if (empty($_POST['name'])) {
+    $error[] =  "Du måste ange namn";
+  } else if (isset($_POST['name'])) {
+    $name = htmlspecialchars( $_POST['name']);
 
-    $url = "http://localhost/myAccount/create-new-password.php?selector=" . $selector . "&validator" . bin2hex($token); 
+    if (preg_match("/^[a-öA-Ö\s]*$/", $name)) {
+      $name = htmlspecialchars($_POST['name']);
+    } else {
+      $error[] = "Namnet får endast innehålla bokstäver och mellanslag";
+    }
+  }
+  if (empty($_POST['email'])) {
+    $error[] = "Obs! Du måste ange namn";
+  } else if (isset($_POST['email'])) {
+    $email = htmlspecialchars($_POST['email']);
+  }
 
-    //token går ut en timme
-    $expires = date("U") + 1800;
-
-
-    require_once '../config/db.php';
-
-    $userEmail = $_POST['email'];
-
-    //töm token om det finns sen tidigare
-    $sql = "DELETE FROM webshop_passwordreset WHERE pwdResetEmail=?";
-    $stmt = $db->prepare($sql);
-    $stmt-> execute();
-
-    $sql = "INSERT INTO webshop_passwordreset 
-            (pwdResetEmail, 
-             pwdResetSelector,
-             pwdResetToken,
-             pwdResetExpires)
-            VALUES (:pwdResetEmail, 
-                    :pwdResetSelector, 
-                    :pwdResetToken, 
-                    :pwdResetExpires);";  
-
-     //säkerhets optimera token  
-    $hashedToken = password_hash($token, PASSWORD_DEFAULT);
-    $stmt = $db->prepare($sql);
-    $stmt-> execute();
-
-    $to = $userEmail;
-    $subject = "Återställ ditt lösenord";
-    $message =  '<p>Följ länken för att återställa ditt lösenord</p>';
-    $message .= '<p>Länk: <br>';
-    $message .= '<a href=" ' . $url . '">' . $url . '</a> </p>';
-    $headers = "Från Spelshoppen.se";
-
-    mail($to, $subject, $message, $headers);
-
-    header("Location: login.php?reset=success");
-   
   
-  }else {
-    header("Location: recoverPassword.php");
-  };
+
+ $sql = "SELECT * FROM `webshop_user` WHERE email = '$email' AND name = '$name'";
+ $stmt = $db->prepare($sql);
+ $stmt-> execute();
+
+ while($row = $stmt->fetch(PDO::FETCH_ASSOC)){ 
+  //print_r($row);
+  $email = htmlspecialchars($row['email']);
+  $controllQuestion = htmlspecialchars($row['controllQuestion']);
+  $controllAnswer = htmlspecialchars($row['controllAnswer']);
+
+ };
 
 
+ endif;
+
+ ?>
+
+</header>
+<main>
+  <h1>Din kontrollfråga är:</h1>
+ <p><?php echo $controllQuestion ?> </p>
+ <form action="checkAnswer.php" method="POST">
+<label for="answer">Svar</label>
+<input type="text" name="answer" placeholder="Ditt svar här">
+<input type="hidden" id="email" name="email" value="<?php echo $email?>">
+<input type="hidden" id="controllQuestion" name="controllQuestion" value="<?php echo $controllQuestion?>">
+<br>
+<button type="submit">Svara</button>
+</form>
+</main>
+<?php
+
+
+
+
+
+require_once "../footer.php"
 
 ?>

@@ -16,10 +16,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') :
   if (empty($_POST['name'])) {
     $error[] =  "Du måste ange namn";
   } else if (isset($_POST['name'])) {
-    $name = $_POST['name'];
+    $name = htmlspecialchars( $_POST['name']);
 
     if (preg_match("/^[a-öA-Ö\s]*$/", $name)) {
-      $name = $_POST['name'];
+      $name = htmlspecialchars($_POST['name']);
     } else {
       $error[] = "Namnet får endast innehålla bokstäver och mellanslag";
     }
@@ -28,38 +28,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') :
   if (empty($_POST['email'])) {
     $error[] = "Obs! Du måste ange namn";
   } else if (isset($_POST['email'])) {
-    $email = $_POST['email'];
+    $email = htmlspecialchars($_POST['email']);
   }
 
   if (empty($_POST['phone'])) {
     $error[] = "Obs! Du måste ange telefonnummer";
   } else if (isset($_POST['phone'])) {
-    $phone = $_POST['phone'];
+    $phone = htmlspecialchars($_POST['phone']);
   }
 
   if (empty($_POST['street'])) {
     $error[] = "Obs! Du måste ange gatuadress";
   } else if (isset($_POST['street'])) {
-    $street = $_POST['street'];
+    $street = htmlspecialchars($_POST['street']);
   }
 
   if (empty($_POST['zip'])) {
     $error[] = "Obs! Du måste ange gatuadress";
   } else if (isset($_POST['zip'])) {
-    $zip = str_replace(' ', '', $_POST['zip']);
+    $zip = str_replace(' ', '', htmlspecialchars($_POST['zip']));
   }
 
   if (empty($_POST['city'])) {
     $error[] = "Obs! Du måste ange gatuadress";
   } else if (isset($_POST['city'])) {
-    $city = $_POST['city'];
+    $city = htmlspecialchars($_POST['city']);
   }
 
   if(empty($_POST['passwordInput'])){
     $error[] = "Obs! Du måste ange ett lösenord";
   }else if (isset($_POST['passwordInput'])){
-    $password = $_POST['passwordInput'];
+    $password = htmlspecialchars($_POST['passwordInput']);
    
+  }
+  if(empty($_POST['controllQuestion'])){
+    $error[] = "Obs! Du måste ange en kontrollfråga";
+  }else if (isset($_POST['controllQuestion'])){
+    $controllQuestion = htmlspecialchars($_POST['controllQuestion']);
+   
+  }
+  if(empty($_POST['controllAnswer'])){
+    $error[] = "Obs! Du måste ange ett svar på din fråga";
+  }else if (isset($_POST['controllAnswer'])){
+    $controllAnswer = htmlspecialchars($_POST['controllAnswer']);
+
   }
 
   
@@ -79,8 +91,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') :
 
       
       //Skicka ny användare till databasen
-      $sql = "INSERT INTO webshop_user (name, email, phone, street, zip, city, password)
-            VALUES (:name, :email, :phone, :street, :zip, :city, :password)";
+      $sql = "INSERT INTO webshop_user (name, email, phone, street, zip, city, password, controllQuestion, controllAnswer)
+            VALUES (:name, :email, :phone, :street, :zip, :city, :password, :controllQuestion, :controllAnswer)";
 
 
 $stmt = $db->prepare($sql);
@@ -92,6 +104,8 @@ $stmt->bindParam(':street', $street);
 $stmt->bindParam(':zip', $zip);
 $stmt->bindParam(':city', $city);
 $stmt->bindParam(':password', $password);
+$stmt->bindParam(':controllQuestion', $controllQuestion);
+$stmt->bindParam(':controllAnswer', $controllAnswer);
 
 $stmt->execute();
 $success = "Du är nu tillaggd! Klicka på Mitt Konto för att logga in";
@@ -172,6 +186,18 @@ endif;
         <div class="passwordValidationText" id="passwordValidationText"></div>
       </div>
 
+      <div class="order_field-password form-container__box">
+        <label for="controllQuestion">Skriv en kontrollfråga här för att i framtiden kunna återställa ditt lösenord</label>
+        <input type="text" name="controllQuestion" id="controllQuestion" class="form-container__box-input" onblur="validateControllQuestion()" required>
+        <br>
+        <span class="QuestionValidationText errors"></span>
+    
+      <div class="order_field-answer form-container__box">
+        <label for="controllAnswer">Svaret på din kontrollfråga: </label><br>
+        <input type="text" name="controllAnswer" id="controllAnswer" class="form-container__box-input" onblur="validateControllAnswer()" required>
+        <br>
+        <span class="AnswerValidationText errors"></span>
+  
       <div class="order_field-submit form-container__submit">
         <input type="submit" value="Registrera" class="form-container__submit-button" id="form-container__submit-button">
       </div>
@@ -180,7 +206,7 @@ endif;
   </section>
 
 <br>
-  <a href="./my-account.php">
+  <a href="../myAccount/login.php">
     <button class="btn-back">Tillbaka</button>
   </a>
 </main>
